@@ -1,0 +1,243 @@
+/* ============================================
+   Alpha — profile feed
+   Black / white / grey. No decoration for its own sake.
+   ============================================ */
+
+:root{
+  --bg: #050505;
+  --bg-elevated: #0c0c0c;
+  --border: rgba(255,255,255,0.08);
+  --text: #f2f2f2;
+  --text-dim: #8a8a8a;
+  --text-faint: #555;
+  --radius: 14px;
+  --max-width: 620px;
+}
+
+*{ box-sizing: border-box; }
+
+html, body{
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body{
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+#profile{
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 48px 16px 40px;
+}
+
+/* ---------- profile head ---------- */
+
+#profile-head{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.avatar-wrap{
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+}
+
+#avatar{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+#profile-name{
+  margin: 14px 0 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: var(--text);
+}
+
+#profile-bio{
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+/* ---------- feed ---------- */
+
+#feed{
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.post{
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 22px;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 400px;
+}
+
+.post:last-child{
+  border-bottom: none;
+}
+
+.post-text{
+  font-size: 15px;
+  color: var(--text);
+  white-space: pre-line;
+  word-wrap: break-word;
+  margin: 0 0 10px;
+}
+
+.post-text:last-child{
+  margin-bottom: 0;
+}
+
+/* ---------- single image ---------- */
+
+.post-image-single{
+  width: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+}
+
+.post-image-single img{
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+/* ---------- gallery (multi-photo horizontal scroll) ---------- */
+
+.gallery{
+  position: relative;
+}
+
+.gallery-track{
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  border-radius: var(--radius);
+}
+
+.gallery-track::-webkit-scrollbar{
+  display: none;
+}
+
+.gallery-item{
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  display: flex;
+}
+
+.gallery-item img{
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 70vh;
+}
+
+.gallery-meta{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.gallery-progress{
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.gallery-progress-bar{
+  height: 100%;
+  width: 0%;
+  background: var(--text-dim);
+  transition: width 0.15s ease-out;
+}
+
+.gallery-count{
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- broken image placeholder ---------- */
+
+.img-broken{
+  width: 100%;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-faint);
+  font-size: 11px;
+  background: var(--bg-elevated);
+}
+
+/* ---------- stopwatch ---------- */
+
+#stopwatch-wrap{
+  margin-top: 44px;
+  display: flex;
+  justify-content: center;
+}
+
+#stopwatch{
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 430px){
+  #profile{
+    padding: 36px 12px 32px;
+  }
+  .avatar-wrap{
+    width: 92px;
+    height: 92px;
+  }
+}
+
+@media (min-width: 768px){
+  #profile{
+    padding: 64px 16px 56px;
+  }
+}
