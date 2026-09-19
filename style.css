@@ -1,0 +1,618 @@
+/* ============================================
+   Alpha — profile feed
+   Black / white / grey. No decoration for its own sake.
+   ============================================ */
+
+:root{
+  --bg: #050505;
+  --bg-elevated: #0c0c0c;
+  --border: rgba(255,255,255,0.08);
+  --divider: rgba(255,255,255,0.28);
+  --text: #f2f2f2;
+  --text-dim: #8a8a8a;
+  --text-faint: #555;
+  --radius: 14px;
+  --max-width: 620px;
+}
+
+*{ box-sizing: border-box; }
+
+html, body{
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  width: 100%;
+}
+
+body{
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+#profile{
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 48px 16px 40px;
+}
+
+/* ---------- profile head ---------- */
+
+#profile-head{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.avatar-wrap{
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+}
+
+#avatar{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+#profile-name{
+  margin: 14px 0 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  color: var(--text);
+}
+
+#profile-bio{
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: var(--text-dim);
+  font-weight: 400;
+}
+
+/* ---------- feed ---------- */
+
+#feed{
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.post{
+  position: relative;
+  padding-bottom: 38px;
+}
+
+/* ---------- stylish divider between posts ----------
+   A hairline that fades out at both ends, with a slowly
+   shimmering light sweeping across it and a small glowing
+   diamond in the centre. */
+.post::after{
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 6px;
+  height: 1px;
+  background:
+    linear-gradient(90deg,
+      transparent 0%,
+      rgba(255,255,255,0.10) 18%,
+      rgba(255,255,255,0.38) 50%,
+      rgba(255,255,255,0.10) 82%,
+      transparent 100%);
+  pointer-events: none;
+}
+
+.post::before{
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 2px;
+  width: 8px;
+  height: 8px;
+  transform: translateX(-50%) rotate(45deg);
+  background: var(--bg);
+  border: 1px solid rgba(255,255,255,0.55);
+  box-shadow:
+    0 0 8px rgba(255,255,255,0.35),
+    0 0 18px rgba(255,255,255,0.12);
+  z-index: 1;
+  pointer-events: none;
+  animation: diamondPulse 4s ease-in-out infinite;
+}
+
+@keyframes diamondPulse{
+  0%, 100%{
+    box-shadow: 0 0 6px rgba(255,255,255,0.25), 0 0 14px rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.40);
+  }
+  50%{
+    box-shadow: 0 0 10px rgba(255,255,255,0.55), 0 0 24px rgba(255,255,255,0.20);
+    border-color: rgba(255,255,255,0.85);
+  }
+}
+
+.post:last-child::after,
+.post:last-child::before{
+  display: none;
+}
+
+.post:last-child{
+  padding-bottom: 0;
+}
+
+/* ---------- "void" post: deep, dark, animated ---------- */
+
+.post-void{
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  border-radius: var(--radius);
+  padding: 64px 26px;
+  min-height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 50% 50%, #0a0a12 0%, #030305 60%, #000 100%);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* slow breathing glow in the middle */
+.post-void::before{
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 78%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle,
+    rgba(120,110,255,0.16) 0%,
+    rgba(70,60,160,0.07) 38%,
+    transparent 70%);
+  filter: blur(18px);
+  z-index: -2;
+  animation: voidBreath 9s ease-in-out infinite;
+}
+
+/* dark vignette closing in from the edges */
+.post-void::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.85) 100%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+@keyframes voidBreath{
+  0%, 100%{ opacity: 0.55; transform: translate(-50%, -50%) scale(0.9); }
+  50%{ opacity: 1; transform: translate(-50%, -50%) scale(1.12); }
+}
+
+.void-stars{
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.void-star{
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
+  animation: voidTwinkle var(--dur, 6s) ease-in-out var(--delay, 0s) infinite;
+}
+
+@keyframes voidTwinkle{
+  0%, 100%{ opacity: 0; transform: translateY(0) scale(0.6); }
+  50%{ opacity: var(--peak, 0.8); transform: translateY(-10px) scale(1); }
+}
+
+.post-void .void-text{
+  position: relative;
+  margin: 0;
+  max-width: 34em;
+  font-size: 16px;
+  line-height: 1.85;
+  letter-spacing: 0.3px;
+  font-style: italic;
+  font-weight: 300;
+  color: #cfcfe0;
+  white-space: pre-line;
+  text-shadow: 0 0 22px rgba(140,130,255,0.30);
+  opacity: 0;
+  filter: blur(6px);
+  transform: translateY(10px);
+  transition: opacity 2.6s ease, filter 2.6s ease, transform 2.6s ease;
+}
+
+.post-void.is-visible .void-text{
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+  animation: voidGlow 7s ease-in-out 2.6s infinite;
+}
+
+@keyframes voidGlow{
+  0%, 100%{ text-shadow: 0 0 16px rgba(140,130,255,0.18); }
+  50%{ text-shadow: 0 0 30px rgba(160,150,255,0.50); }
+}
+
+@media (prefers-reduced-motion: reduce){
+  .post::before,
+  .post-void::before,
+  .void-star,
+  .post-void.is-visible .void-text,
+  .post-image-single.is-pending,
+  .gallery-item.is-pending{
+    animation: none;
+  }
+  .void-star{ opacity: 0.5; }
+  .post-void .void-text{
+    transition: none;
+    opacity: 1;
+    filter: none;
+    transform: none;
+  }
+}
+
+.post-text{
+  font-size: 15px;
+  color: var(--text);
+  white-space: pre-line;
+  word-wrap: break-word;
+  margin: 0 0 10px;
+}
+
+.post-text:last-child{
+  margin-bottom: 0;
+}
+
+/* ---------- single image ---------- */
+
+.post-image-single{
+  width: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+}
+
+.post-image-single img{
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+/* ---------- gallery (multi-photo horizontal scroll) ---------- */
+
+.gallery{
+  position: relative;
+}
+
+.gallery-track{
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  border-radius: var(--radius);
+}
+
+.gallery-track::-webkit-scrollbar{
+  display: none;
+}
+
+.gallery-item{
+  flex: 0 0 auto;
+  scroll-snap-align: center;
+  max-width: 100%;
+  max-height: 70vh;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  display: flex;
+}
+
+.gallery-item img{
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 70vh;
+}
+
+.gallery-meta{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.gallery-progress{
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.gallery-progress-bar{
+  height: 100%;
+  width: 0%;
+  background: var(--text-dim);
+  transition: width 0.15s ease-out;
+}
+
+.gallery-count{
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- audio ---------- */
+
+.audio-list{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.audio-item{
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+
+.audio-label{
+  display: block;
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.audio-item audio{
+  display: block;
+  width: 100%;
+  height: 40px;
+  color-scheme: dark;
+}
+
+.audio-error{
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+.audio-error a{
+  color: var(--text-dim);
+  text-decoration: underline;
+}
+
+/* ---------- video ---------- */
+
+.video-list{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.post-video{
+  width: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #000;
+  border: 1px solid var(--border);
+}
+
+.post-video video{
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 80vh;
+  background: #000;
+  color-scheme: dark;
+}
+
+.post-video .audio-error{
+  padding: 0 12px 10px;
+}
+
+
+/* ---------- virtualized feed: parked slots ---------- */
+
+/* A parked slot keeps its height (set inline by the engine) but
+   shows nothing, so memory is freed and the scrollbar never jumps. */
+.post.is-parked{
+  overflow: hidden;
+}
+
+#feed-sentinel{
+  height: 1px;
+  width: 100%;
+}
+
+/* ---------- image loading shimmer ---------- */
+
+.post-image-single.is-pending,
+.gallery-item.is-pending{
+  position: relative;
+  min-height: 200px;
+  background:
+    linear-gradient(100deg,
+      transparent 20%,
+      rgba(255,255,255,0.05) 50%,
+      transparent 80%),
+    var(--bg-elevated);
+  background-size: 220% 100%, 100% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+
+.gallery-item.is-pending{
+  min-width: 78%;
+}
+
+.post-image-single.is-pending:has(img.is-loaded),
+.gallery-item.is-pending:has(img.is-loaded){
+  min-height: 0;
+  min-width: 0;
+  animation: none;
+  background: var(--bg-elevated);
+}
+
+.post-image-single img,
+.gallery-item img{
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.post-image-single img.is-loaded,
+.gallery-item img.is-loaded{
+  opacity: 1;
+}
+
+@keyframes shimmer{
+  from{ background-position: 220% 0, 0 0; }
+  to{ background-position: -120% 0, 0 0; }
+}
+
+/* ---------- tap-to-load audio / video ---------- */
+
+.media-holder{
+  width: 100%;
+}
+
+.play-btn{
+  appearance: none;
+  -webkit-appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.play-btn svg{
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.28);
+  background: rgba(255,255,255,0.06);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.play-btn:hover svg,
+.play-btn:focus-visible svg{
+  background: rgba(255,255,255,0.14);
+  border-color: rgba(255,255,255,0.55);
+}
+
+.play-btn:active svg{
+  transform: scale(0.94);
+}
+
+.play-btn:focus-visible{
+  outline: 2px solid rgba(255,255,255,0.4);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+.play-hint{
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+/* video: large 16:9 poster area with a centred play button */
+.play-btn-video{
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  min-height: 220px;
+  aspect-ratio: 16 / 9;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at center, #141414 0%, #050505 100%);
+}
+
+.play-btn-video svg{
+  width: 64px;
+  height: 64px;
+  padding: 18px;
+}
+
+/* ---------- broken image placeholder ---------- */
+
+.img-broken{
+  width: 100%;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-faint);
+  font-size: 11px;
+  background: var(--bg-elevated);
+}
+
+/* ---------- stopwatch ---------- */
+
+#stopwatch-wrap{
+  margin-top: 44px;
+  display: flex;
+  justify-content: center;
+}
+
+#stopwatch{
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 430px){
+  #profile{
+    padding: 36px 12px 32px;
+  }
+  .avatar-wrap{
+    width: 92px;
+    height: 92px;
+  }
+}
+
+@media (min-width: 768px){
+  #profile{
+    padding: 64px 16px 56px;
+  }
+}
